@@ -5,4 +5,4 @@ The motto is pretty simple - A person should be able to understand almost all ab
 
 #### One file - One place - All of it
 
-Feel free to use it if you find it useful. Or even maintain this with you find this helpful. 
+Feel free to use it. Or even maintain this with you find this helpful. 
