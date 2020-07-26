@@ -1,0 +1,1168 @@
+GIT{
+	
+	its a version control system.
+
+	GITHUB{
+
+		Github is just a online server where you can store your git repo.
+		+ some added funtionality
+	}
+
+	TERMINAL{
+		
+		terminal is a way to interact with the OS. CLI.
+		linux terminal is more advanced than other shells. 
+
+		common terminal cmds: ls, cd, mkdir, rm -rf (to remove the directory), rm (remove a file), touch (create a file)
+	}
+
+	VERSION{
+		
+		||git --version|| : to check the version of git intalled in the terminal
+	}
+
+	WORKFLOW{
+
+		REPOSITORY{
+
+			data src which stores the full history + src control of the project.
+			can be hosted locally or remote. 
+		}
+
+		DIRECTORY{
+
+			current state of the repo.
+		}
+
+		WORKFLOW DIAG{
+
+			[WORKING DIR] --> changes made to working dir --> add/remove files to/from staging area --> [STAGING AREA]
+			[STAGING AREA] --> commit changes --> [LOCAL REPO] --> push/pull to/from remote --> [REMOTE REPO]
+
+			we make a change in the [WORKING DIR] ( edit, create, remove file).
+			now we want to make a snapshot of this new state of [WORKING DIR].
+			this saving of snapshot is called as COMMIT which is done by git.
+			we can not directly commits that we just created. first we need to tell the git which files to select for the commit. we do that by adding the files to [STAGING AREA].
+			sometimes it happens that there are many files that we dont want to add in the commit. like garbage logs created by IDE. so with git we can select all the other files and let these files be where they are so that we get the useful files in the commit only.
+			once we have added the needed files to the [STAGING AREA] we can now commit files to git. all the files in the [STAGING AREA] gets stored in the commit.
+			when you commit the changes it gets stored in the [LOCAL REPO]. then we can share this new change with the [REMOTE REPO] so to update it as well with the local changes.
+		}
+	}
+
+	INITIALIZING{
+		create a new floder + code
+		now we want to add vcs of git in it
+		for that we have to tell git that this folder is a git repository now.
+		
+		we do that by the command : ||git init||
+		
+		make sure where you use this command. it has to be used inthe folder you want to initialize git.
+		using it in root/home would be invitation to hell.
+
+		once we use this command it makes a hidden folder by the name ||.git||
+		it used this folder to maintain the src history and branch data.
+	}
+
+	MAKING A CHANGE{
+		once we have initialized the repo.
+		we can make some changes in the files.
+		now we want to commit these files.
+		but first we should look at the status of our repo.
+
+		||git status|| tells us the current status of the repo with respect to the last commit.
+
+		it will tell you :which files have been changed :which of those files are currently in the staging area
+		so after making our code changes we use ||git status|| and we can see our changes there in red which means that those changes are not added to the staging area yet.
+		it shows them as untracked files.
+	}
+
+	ADDING/REMOVING TO/FROM STAGING AREA{
+
+		now we want to add a file to staging area. 
+
+		||git add x|| will add file with name x to the staging area. by this way we can add all files we want 1 by 1. if x is a folder name inside the repo it will add all the untracked files which have been changed in that folder.
+
+		||git add .|| will add all the files. use only if there isnt any file you wouldnt want to save.
+
+		||git rm x|| will delete the file x from the dir. but it will show error if x is already staged. it deletes unstaged file x + adds deletion to staged area.
+
+		||git rm -f x|| will delete the staged file from the dir as well as git.
+
+		||git rm --cached x|| will unstage a staged file x
+
+		we can use ||rm x|| to delete an unstaged file and then ||git add x|| to update git stage about the deletion. this is when x is unstaged.
+		so basically ||git rm x|| = ||rm x|| && ||git add x||
+
+		||git rm log/\*.log|| This command removes all files that have the .log extension in the log/ directory.
+	}
+
+	COMMIT FILES IN STAGING AREA{
+
+		now we want to commit the files in the staging area.
+
+		||git commit|| will commit all the staged changes. but when you use this for the first time in your repo git will ask you first to tell who you are.
+
+		||git config --global user.email "myemail@gmail.com"|| and
+		||git config --global user.name "john snow"|| are 2 commands that we have to run once before the first commit to tell git our email and username.
+		after that we can use ||git commit|| to tell get to store that staged changes.
+
+		when you use ||git commit|| it will open a file in vim for you to add your message describing the changes in the commit. this is helpfil for tracking later.
+
+		||git commit -m "here is my message describing the commit changes"|| will add the message and commit in the same command.
+
+		||git commit --amend|| will add your new changes to the last commit instead of creating a new commit
+
+		||git commit -a -m "msg"|| will commit all unstaged and staged files so if you want all files to be staged and commit no need to use ||git add .|| just directly use this. unstaged files added by -a are those which are modified or deleted. files which created new will not be added by -a.
+
+		when you commit git will show you the :branch + () + :commitID + :commitMessage + :files that were staged in this commit 
+	}
+
+	HELP{
+
+		at any given time if we want to know all the options / flags we can use with a git command we can use --help for git show all the possible options and thier small description with it.
+
+		||git commit --help|| would be th command if we cant to know all the options we can use with ||git commit||
+	}
+
+	LOGS{
+
+		||git log|| will show you all your commits in the current branch. also tells where your HEAD is. usually it shows it in chronological order of commits.
+
+		but there are many options to see what you exactly want to look
+
+		||git log -p -2|| -p will how the diff introduced in each commit. -2 will limit the diff of each commit to max 2 lines.
+
+		some other examples
+		||git log --online|| shows the commit id (small) and the message only
+
+		||git log --pretty=oneline|| shows the commit id large and the msg
+
+		$ git log --pretty=oneline
+		ca82a6dff817ec66f44342007202690a93763949 changed the version number
+		085bb3bcb608e1e8451d4b2432f8ecbe6306e7e7 removed unnecessary test code
+		a11bef06a3f659402fe7563abf99ad00de2209e6 first commit
+
+		we can also format these logs. this is very usefull when you are using logs as input for some prog.
+
+		$git log --pretty=format:"%h - %an, %ar : %s"
+		ca82a6d - Scott Chacon, 11 months ago : changed the version number
+		085bb3b - Scott Chacon, 11 months ago : removed unnecessary test code
+		a11bef0 - Scott Chacon, 11 months ago : first commit
+
+		>>  Option  : Description of Output
+				%H  : Commit hash
+				%h  : Abbreviated commit hash
+				%T  : Tree hash
+				%t  : Abbreviated tree hash
+				%P  : Parent hashes
+				%p  : Abbreviated parent hashes
+				%an : Author name
+				%ae : Author e-mail
+				%ad : Author date (format respects the --date= option)
+				%ar : Author date, relative
+				%cn : Committer name
+				%ce : Committer email
+				%cd : Committer date
+				%cr : Committer date, relative
+				%s  : Subject
+
+		$ git log --pretty=format:"%h %s" --graph
+		* 2d3acf9 ignore errors from SIGCHLD on trap
+		* 5e3ee11 Merge branch 'master' of git://github.com/dustin/grit
+		|\
+		| * 420eac9 Added a method for getting the current branch.
+		* | 30e367c timeout code and tests
+		* | 5a09431 add timeout protection to grit
+		* | e1193f8 support for heads with slashes in them
+		|/
+		* d6016bc require time for xmlschema
+		* 11d191e Merge branch 'defunkt' into local
+
+		>>Option Description
+				-p              : Show the patch introduced with each commit.
+				--stat          : Show statistics for files modified in each commit.
+				--shortstat     : Display only the changed/insertions/deletions line from the --stat command.
+				--name-only     : Show the list of files modified after the commit information.
+				--name-status   : Show the list of files affected with added/modified/deleted information as well.
+				--abbrev-commit : Show only the first few characters of the SHA-1 checksum instead of all 40.
+				--relative-date : Display the date in a relative format (for example, “2 weeks ago”) instead of using the full date format.
+				--graph         : Display an ASCII graph of the branch and merge history beside the log output.
+				--pretty        : Show commits in an alternate format. Options include oneline, short, full, fuller, and format (where you specify your own format).
+				////////////////////
+				-(n)            : Show only the last n commits
+				--since,--after : Limit the commits to those made after the specified date.
+				--until,--before: Limit the commits to those made before the specified date.
+				--author        : Only show commits in which the author entry matches the specified string.
+				--committer     : Only show commits in which the committer entry matches the specified string.
+	}
+	
+	CHECKOUT COMMIT{
+
+		||git checkout X|| will take you to some previous commit X . X is the commit id of the commit. when you do git commit commitID it will take you to the commit but only to check it out. you will be on a temporary branch not your original branch. you can only see the commit.
+		doing ||git commit|| now will show you logs till that moment. at this time we are in a detached head state.
+
+		this can be dangerous because. if you take commid of 1 year ago it can cause problem.
+		it can be used to access deleted files.
+
+		||git checkout BN|| where BN is branch nameto come back to the last commit on that branch
+
+		||git checkout -|| will take head to last checked out BN or Commit.
+
+	}
+	REVERT{
+
+		||git revert CID|| where CID is the commitID of some previous commit.
+	
+		lets say there were 5 commits ABCDE. A to E. now we are at E. but we want to permanently go D.
+		||git revert E|| will undo undo the commit E. but will not delete commit E. it will add a new commit without the changes commited in E.
+		so now you will have 6 commits ABCDEF. F being the one with reverted commit of E. should look like D now. 
+		when you revert a commit from the middle. it might give you a conflict.
+		resolve confilct manually. then add and commit.
+		so this is a save way to undo a commit. if you by mistakenly delete a useful file you can checkout that commit and retrieve your data. because the commit is still there accessible.
+		||git revert F|| will revert the revert commit. so its safe to revert because it can be undone. now we will have ABCDEFG and G will look like E.
+	}
+	RESET{
+
+		||git reset CID|| where CID is the commit id of some previous commit. 
+
+		3 types : soft . mixed . hard.
+		soft is like a checkout of some previous commit.
+		hard will delete every commit that came after CID.
+		so it if you had ABCDEF commits. 
+
+		||git reset --hard C|| it will delete DEF commits. and the head will reach to C.
+	}
+	
+	IGNORE{
+
+		sometimes there are many auto generated files which are not very important. cache. logs. etc. we dont need them. but since they keep generating and we dont want them we have to just keep making sure that we dont add them to the repo. these files can be made permanently untracked by git.
+		to do so we first create a file with name ".gitIgnore" and open it as txt file. then in this file we write the name/ paths of the files that we wish git not to track at all.
+		it is adviced that we make this file in the initial commit so that the ignoring can begin at that time only. if a new file needs to be ignored but git has already marked it as unstaged. you first need to untrack it with the cmd ||git rm -r --cached .|| this cmd will untrack all files so that from now on it will not be tracked
+	}
+
+	BRANCHES{
+
+		git is a graph. not a tree.
+		branches are different development paths. they have thier own logs with partially different commits. different branches different end goals.
+		when we use ||git init|| we automatically create a branch with name master.
+		
+		to create a new branch we use ||git branch NB|| where NB is the name of the new branch
+		
+		or we can use ||git checkout -b NB|| this will create the new branch and switch current branch to nb
+
+		when you create a branch the initial code in that branch will be the code in previous branch + untracked files.
+		these untracked files will remain with the opened branch.
+		
+		||git branch -a|| will list down all the branches we have locally
+
+		||git branch -d BN|| will delete the local branch BN when you are on a different branch. this will give an error if your current branch is not merged with the branch you wish to delete. in that case if you still want to delete use ||git branch -D BN||.
+
+		the new branch also copies all the logs for the commits made in the original branch. using ||git reset --hard CID|| on 1 branch will not affect the commits on the other branch.
+		sometimes the merge happens partially and we have to use ||git commit -m "msg"|| to make the commit.
+	}
+
+	MERGE{
+
+		branches are merged at the end of thier goal.
+		there are 2 cmds to merge BN2 into BN1
+
+		||git merge BN2|| is used when we are already on BN1. this will merge the BN2 on the current branch so make sure you are on BN1.
+		||git merge BN2>BN1|| can be used when you are not on the destination branch which is BN1 here.
+
+		but this is not what we usually use in practice. ||git merge BN2|| will merge 'all' the commits of BN2 to BN1 which might be useful to someone but we usually just want the updated version of BN2 to be merged.
+
+		||git merge --squash BN2|| is used when on BN1. sqaush basically summarises all the commits into 1. that is usually useful to us. we dont want to know if we created a file and then deleted it before the current version of BN2. so this command helps ignoring such redundant information.
+	}
+	
+	REBASE{
+
+		merge command basically updated BN1 with all the changes in BN2 in a new commit ober BN1. 
+		rebase will update BN1 but all the commits of BN2 
+		lets say there is this structure
+		
+		BN1 m1->m2->m3->m4->m5
+					|
+		BN2			m3->f1->f2
+
+		BN2 was created from BN1 at m3. then BN1 made new commits m4 m5 and BN2 made f1 f2 commits.
+		now suppose you were working on BN2 but as new funtionality is added to mainline which is BN1 you have to refactor the code ib BN2.
+		
+		||git rebase BN1|| when on BN2 will rebase your BN2 from m3 to the lastest commit on BN1 which is m5. it will look like
+
+		BN1 m1->m2->m3->m4->m5
+							|
+		BN2					m5->f1->f2
+
+		this way the commit logs remain intact and the BN2 git updated also. if at this stage i use ||git rebase BN2|| when i cam on BN1 will
+		1. check the last common commit -> m5
+		2. check the changes after the last common commit in BN2 -> f1 f2
+		3. add them to BN1
+
+		so it will now look like
+
+		BN1 m1->m2->m3->m4->m5      f2
+							|		|
+		BN2					m5->f1->f2
+
+		||git rebase -i BN1|| when on BN2 will give us the option to squash all the commits that are in BN2 which are above the last commit of BN1 (f1 and f2 commits) into a single commit. you have to then write "pick" in front of the commit you want and rest as "squash".
+	}
+
+	GITHUB{
+
+		github adds many more functionalities to git.
+		create new github account. add repo with gitIgnore + licence.
+		issues can be labelled by contributers/ users.
+		pull request is when someone is requestiong to get a copy of your code on thier machine.
+		repo wiki contains documentation of your repo.
+		settings->deploy keys : used by heroku
+		forking someone else's repo will make a copy of that repo in your account so now you can mess around with it.
+
+		clone or download is used to create a local repo from github by ||git clone RepoLink||
+		
+		downloading by zip will download it without the git files. you will have to use ||git init|| to remake it a new git local repo. but all the previous commit info will be gone. so its better to just clone it.
+	}
+
+	REMOTE REPO SETUP{
+
+		go to your account in github and create a blank new repo. copy its http link (RepoLink).
+
+		go to your local git repo and use ||git remote add origin RepoLink|| to add origin to your remote repo.
+
+		origin basically is an alias to the repo link so that you dont have to remeber it. next time if need to push/pull instead of telling git the RepoLink everytime we can just say origin and git will understand that we have already added RepoLink as origin.
+
+		to check if the binding is done properly we use ||git remote -v||. if it shows repolink and "(fetch)" and "(push)" that means youre good to go. this means that via origin you can push and fetch. 
+
+		||git fetch origin|| will fetch all the info that you dont have on your local but is there on the remote origin.
+
+		|| git remote rename pb paul|| can rename remote repo alias from pb to paul
+
+		PUSH AND PULL{
+			if you have a local repo and want to connect it ro a remote repo make sure that remote repo does not have any commits. 
+
+			||git push origin BN|| will push your code to remote BN branch name. 
+
+			sometimes you may be asked to first take a pull and merge the changes already present on remote and then only you can push
+
+			||git pull origin BN|| will help in pulling from github branch. if the remote already has some commits it will show error not let you merge local with remote.
+			
+			||git pull origin BN --allow-unrelated-histories|| will help in that case to pull from the repo.
+
+			||git push origin BN|| is then used to push our commits onto the remote repo BN.
+
+			||git push -u origin BN|| will push the code and then remember origin BN so from next time you can just use ||git pull|| and ||git push||
+
+			push can only be done from local to remote if local branch name is same as remote BN
+		}
+		
+		DELETE REMOTE BRANCH{
+
+			||git push origin --delete BN|| will delete a remote branch.
+		}
+	}
+
+	DIFF{
+
+		||git diff|| is used to see all the changes we have made which are still unstaged (staged vs working dir)
+
+		||git diff --cached|| or ||git diff --staged|| is used to see changes that have been staged (staged vs last commit)
+	}
+	MOVING / RENAMING FILE{
+
+		||git mv file_from file_to|| is used when the file is renamed or moved from "file_from" to "file_to"
+		
+		otherwise git will think file_from is deleted and new file file_to is created
+
+		so this command is equivalent to ||mv file_from file_to|| && ||git rm file_from|| && ||git add file_to||
+	}
+	UNDOING THINGS{
+
+		there are many things in git that you can undo. but be careful as not all undo can be undone. some undos will remain permanent and you may lose your work.
+
+		CHANGING YOUR LAST COMMIT{
+
+			||git commit --amend|| updates your last commit with your new staged changes.
+
+			git commit --amend is kind of shorthand for (given changes have been made, and are either in the index or in the working directory):
+			git stash
+			git reset HEAD~1
+			git stash pop
+			git add .
+			git commit
+
+			to undo a commit amend:
+			lets say your commit id is C1
+			then you ammend it so the commit id becomes C2
+			now you want to undo this last action of ammend
+
+			we can use 
+
+			1. git diff C2..C1 | git apply -
+
+
+			git diff c2..c1 will produce the patch applied by c1 till (excluding) c2.
+			git apply will apply the patch to the git src tree
+			git apply - is used to take stdin as input . that will be provided by diff.
+
+			2. git commit -a --amend
+
+			this will ammend the commit back to original
+
+			3. git diff C1..C2 | git apply -
+
+			this will bring the changes that were in C2 till (excluding) C1
+			now we can continue with this
+		}
+
+		CHANGING SOME COMMIT IN HISTORY{
+
+			lets say there were 4 commits c1->c2->c3->c4
+			now you want to change the c2 commit
+
+			||git commit -a --fixup C2|| will add a new commit after c4 . it will look like c1->c2->c3->c4->c5. in c5 we modify changes introduced by c2.
+
+			||git rebase --autosquash --interactive C1|| this will rebase the branch and fixup the history. it will now look like c1->c2->c3->c4 . c2 will be different.
+
+			--interactive or --i works the same way
+		}
+
+		UNSTAGING A STAGED FILE{
+
+			||git rm --cached X|| or ||git reset HEAD X|| unstages file X
+
+			||git reset|| unstages all files 
+		}
+
+		UNMODIFY A MODIFIED FILE{
+
+			||git checkout -- X|| will undo the modifications done to file X as compared to last commit
+		}
+	}
+	TAGS{
+
+		||git tag|| will show you all your tags
+
+		If you’re only interested in looking at
+		the 1.4.2 series, you can run this:
+		
+		||git tag -l 'v1.4.2.*'||
+		v1.4.2.1
+		v1.4.2.2
+		v1.4.2.3
+		v1.4.2.4
+
+		||git show v1.4|| will show all info about tag v1.4
+
+		||git tag v1.4 CID|| will tag a previous commit with commit id as CID
+
+		||git push origin v1.5|| will push the tag to remote repo. otherwise the tags remain locally available only.
+
+		||git push origin --tags|| will push all tags to remote repo origin.
+
+		CREATE TAGS{
+
+			2 types of tags:
+			1. Lightweight : — it’s just a pointer to a specific commit.
+			2. Annotated tags, however, are stored as full objects in the Git database. They’re checksummed; contain the tagger name, e-mail, and date; have a tagging message; and can be signed and verified with GNU Privacy Guard (GPG). It’s generally recommended that you create annotated tags so you can have all this information; but if you want a temporary tag or for some reason don’t want to keep the other information, lightweight tags are available too.
+
+			ANNOTATED TAGS{
+
+				||git tag -a v1.4 -m "my version 1.4"|| -a makes it annotated tag
+			}
+			SIGNED TAGS{
+
+				||git tag -s v1.5 -m 'my signed 1.5 tag'|| produces a signed tag with GPG if you have a private key.
+
+				||git tag -v V1.5|| is used to verify signed tag.
+			}
+			LIGHTWEIGHT TAGS{
+
+				||git tag v1.4|| lightweight tag don’t supply the -a, -s, or -m option
+			}
+
+		}
+	}
+	GIT ALIAS{
+
+		||git config --global alias.X 'Y'|| will make a global alias for git. X is the alias. Y is the command
+
+		now ||git X|| will mean ||git Y||
+
+		||git config --global alias.unstage 'reset HEAD --'|| this will make ||git unstage fileA|| and ||git reset HEAD fileA|| equivalent.
+	}
+}
+SQL{
+
+	DATABASES{
+		collection of related information. can be of any form.
+	}
+	
+	OPERATION{
+		CRUD{
+			- create
+			- read
+			- update
+			- delete
+		}
+	}
+	
+	2 MAIN TYPES{
+		RELATIONAL{
+			- organize data in tables. rows and columns.
+			- have unique keys.
+			- SQL is the standard language 
+			- mysql postgresql, etc are popular RDBMS with slight changes in sql
+		}
+	
+		NON RELATIONAL{
+			- key value stores
+			- jsons, graphs etc stored in documents
+			- mongoDB, dynamoDB etc are popular NRDBMS with no common language
+		}
+	}
+
+	QUERY{
+		- a request to the dbms for a crud operation
+	}
+
+	TABLES{
+		- rows : >
+		- columns : V
+		- columns define single attribute all entrys
+		- rows define single entry all attributes
+	}
+
+	KEYS{
+
+		PRIMARY KEY{
+			- A collumn which can uniquely define every entry
+			- primary key can not be null
+
+			SURROGATE KEY{
+				- a primary key with no association to anything in the real world. just a mapping of a unique number or strings with and entry to uniquely address it.
+				example, EMPLOYEE_ID.
+			}
+
+			NATURAL KEY{
+				- a primary key which has some meaning to it. it is unique as well as has a purpose in the real world.
+				example, CUSTOMER_MOBILE_NUMBER can be unique in a table for every customer.
+			}
+		}
+
+		FOREIGN KEY{
+			- a foreign key stores a primary key of another table in the current table. defines relationships between tables.
+			- foreign key can be null
+		}
+
+		COMPOSITE KEY{
+			- when the unique key / primary key is not 1 collumn but a composition of multiple collumns. none of the attribute can uniquely address each entry but a combination of 2 or more can, then that is a compoite key .
+		}
+	}
+
+	BOOT UP{
+		- sql dbms always runs on server
+		- install mysql server 
+		- you will have to put in a id - password pair to access the server
+
+		- you can also install popsql as sql query IDE
+		
+		CHANGE PASSWORD{
+			 >> alter USER 'root'@'localhost' identified by '$new_password' <<
+		}
+
+		LOGIN INTO THE MYSQL SERVER{
+			>> mysql -u $yourUserName -p $yourPassword <<
+		}
+
+		>> exit << will exit you out of the server
+	}
+
+	SQL {
+
+		- SQL is basically 4 types DQL, DDL, DCL, DML
+
+		DATA QUERY LANGUAGE{
+			- to get info from DB
+		}
+
+		DATA DEFINITION LANGUAGE{
+			- used to define DB schemas
+		}
+
+		DATA CONTROL LANGUAGE{
+			- to control access to the data in DB.
+			- user and permission mgmt.
+		}
+
+		DATA MANIPULATION LANGUAGE{
+			- to insert, update and delete from DB
+		}
+
+		CREATE DATABASE{
+			>> create database $dbname; <<
+			- this will create a table with name as $dbname
+		}
+
+		CREATE TABLE{
+
+			STRUCTURE{
+				 >> create table $tableName ()
+				 	- $col1name $datatype1,
+				 	- $col2name $datatype2,
+				 	- $col3name $datatype3,
+				 	.
+				 	.
+				 	.
+
+
+				 	- contraints
+				 ); <<
+			}
+
+			- so the create table query is used to create a table in the DB
+			- first we define the column name and its data types
+			- then we define the constrains over those columns
+
+			DATA TYPES{
+				- SQL has the following dataTypes (popular ones) which tell the DBMS the type of data which will be stored into that column :
+
+				INT -- wole numbers
+				DECIMAL(M,N) -- decimal numbers total len : M , len after decimal : N
+				VARCHAR(N) -- string of len N
+				BLOB -- Binary Large Object, strores large data like images or files
+				DATE -- 'yyyy-mm-dd'
+				TIMESTAMP -- 'yyyy-mm-dd hh:mm:ss'
+			}
+
+			>> create table student (
+				student_id INT primary key,
+				name varchar(20),
+				major varchar(20)
+			); << 
+
+			- this will create student table with primary key as student_id 
+			- we can define primary like above i.e, with the column name or we define it later in the constraints
+			
+			>> create table student (
+				student_id INT,
+				name varchar(20),
+				major varchar(20),
+
+				primary key(student_id)
+			); << 
+
+			CONSTRAINTS{
+
+				- we can out some constraints to the type of values which can be inserted in a col
+
+				>> create table student (
+				student_id INT auto_increment,
+				name varchar(20),
+				major varchar(20) default 'To be decided',
+
+				primary key(student_id),
+				not null (name, major),
+				unique(name),
+				foreign key(teacher_id) on delete set null
+				foreign key(HOD_id) on delete cascade
+
+				); <<
+
+				- not null means col can not have null as value
+				- unique means col can not have val which already exist in some other row
+				- default val is used when the val is not input for that col while inserting entry
+				- auto_increment is used like default but produces next number for the new entry. used for primary keys usually
+				- on delete set null makes the value null of the FK if the row in PK is deleted 
+				- on delete cascade deletes the row of the FK if the row in PK is deleted. usually used when FK is part of PK of this table.
+			}
+		}
+
+		DESCRIBE TABLE{
+
+			>> describe $tableName << will show the sceme of the table. cols, constraints etc.
+		}
+
+		DELETE TABLE{
+
+			>> drop table $tablename << will delete that particular table
+		}
+
+		MODIFY TABLE{
+
+			>> alter table $tableName add $colName $dataTaype << will add col to the table
+
+			>> alter table $tableName drop $colName << will delete that col from the table
+
+			>> alter table $tableName1 add foreign key ($colNameInTable1whereItIsFK) references $tablename2 ($colNmaeinTable2whereItIsPK) << will add foreign key constraint
+		}
+
+		INSERT DATA IN TABLE{
+
+			>> insert into $tableName values($val1, $val2, "$val3"); << this query will add an entry into the DB the values in the bracket in this query should be in the same order as they were in the table schema. all cols must be given in values ().
+
+			>> insert into $tableName($col2, $col4, $col6) values ($val1, $val2, "$val3"); << this query will add entry to table in the column names written in the column bracket with respective values written in the values(). for all other cols null will be written unless a default value is written in the constrains of the table schemas.
+		}
+
+		READ DATA FROM TABLE {
+
+			>> select * from $tablename; << to read from table $tablename . will output all entries in student.
+
+		}
+
+		FILTERING CONDITON WHERE {
+
+			>> select * from $tableName where $colName = $val ; << this query will fetch all the entries in which the $colname is $val 
+
+		}
+
+		COMPARISON OPERATIONS{
+
+			=   : EQUALS
+			<>  : NOT EQUALS
+			>   : GREATER THAN
+			<   : LESS THAN
+			>=  : GREATER THAN EQUAL TO
+			<=  : LESS THAN EQUAL TO
+		}
+
+		BOOLEAN OPERATIONS {
+
+			or  : 1 of the 2 conditions suffices  : where $c1 or $c2
+			and : both conditions are needed	  : where $c1 and $c2
+		}
+
+		LIST OPERATION {
+
+			in : where $col3 in ('jack', 'ram', 'cow');
+		}
+		UPDATE TABLE ENTRIES{
+
+			>> update $tableName set $colname = $newval where $condition ; << this query will update all the entries which suffice the condition with $newval in the $colName
+			>> update $tableName set $colname = $newval << will update all the entries
+
+		}
+
+		DELETE ENTRIES {
+
+			>> delete from $ tablename where $condition ; will delete all rows which suffice the condition;
+		}
+
+		FETCHING SPECIFIC DATA FROM TABLES{
+
+			>> select * from $tablename ; << will show all rows and cols
+
+			>> select * from $tablename where $condition; << will show all cols and only those rows which suffice condition
+
+			>> select $tableName1.$col2, $tableName2.$col4 from $tablename1, $tablename2 ; << will show all rows but only col2 for table1 and 4 of table 2
+
+			>> select $tableName.$col2, $tableName.$col4 from $tablename  where condition ; <<	will show col 2 and 4 for rows which suffice the codition
+		}
+
+		ORDERING THE FETCHED ENTRIES {
+
+			>> select $cols from $tables where $conditions order by $col3 ; << this will order them acc to col3
+
+			>> select $cols from $tables where $conditions order by $col3 desc; << this will order them acc to col3 descendingly
+
+			>> select $cols from $tables where $conditions order by $col3 , $col7 ; << this will order them acc to col3 first and then for those which have col3 val same they will be ordered amongst themselves by the order of col7
+
+		}
+
+		LIMIT{
+
+			>> select $cols from $tables where $conditions limit 5 ; << will show max 5 entries which were fetched
+
+			>> select $cols from $tables where $conditions order by $col3 limit 3<<  will show top 3 wrt col3
+		}
+
+		FETCH ALL UNIQUE VALUES FROM A COLUMN {
+
+			>> select distinct $cols from $table << will produce list of all unique values in that col
+		}
+
+		FUNCTIONS {
+
+			>> select $func($col) from $tablename where $cond ; << will execute the function on that col. produces 1 entry output.
+
+			count
+			avg
+			sum
+		}
+
+		AGGREGATION {
+
+			>> select $func($col2) from $tablename where $cond group by $col5; << will execute function on that col for all the entries segregated by $col5. will contain as many entries in outout as the number of distinct values in col5.
+		} 
+
+		SQL REGEX{
+
+			% : any number of chars . 0 or more.
+			_ : 1 char 
+
+			>> select $func($col) from $tablename where name like "__%williams" ; << min 2 chars in front of williams
+		}
+
+		UNION{
+
+			>> select $col1 as $somename from $tablename1 where $cond1 
+			   union
+			   select $col2 from $tablename2 where $cond2 ; <<
+
+			- this will return a col with name $somename and have entries of 1st select query followed by entries of 2nd select query.
+		}
+
+		JOINS{
+
+			- joins are used to fetch data wheen data resides in multiple data
+
+			>> select $table1.$col2, $table1.$col3, $table2.$col4 from $table1 join $table2 on $table1.$col2  = $table2.$col7 ; <<
+
+			- this will produce t1.c2, t1.c3, t2.4 for entries where t1.c2 is same as t2.c7
+
+			TYPES OF JOINS {
+
+				INNER JOIN{
+
+					- it produces only those entries which are present in both tables wrt the pivot col.
+				}
+
+				LEFT JOIN aka LEFT OUTER JOIN{ 
+
+					- it produces all entries of the left table and common entries of the right table.
+				}
+
+				RIGHT JOIN aka RIGHT OUTER JOIN{
+
+					- it produces all entries of the right table and common entries of the left table.
+				}
+
+				FULL OUTER JOIN {
+
+				 	- it produces all entries both the tables.  if some entry is not found in the other table then it is marked as null.
+				}
+
+
+			}
+		}
+
+		NESTED QUERIES{
+
+			- a query which used the output of another query as its input
+
+			>> select $T1.$col1 from $T1 where $T1.$col2 in (
+					select $T2.$col4 from $T2 where $cond
+			) ; <<
+
+			>> select $T1.$col1 from $T1 where $T1.$col2 = (
+					select $T2.$col4 from $T2 where $cond limit 1
+			) ; <<
+
+		}
+
+		DELIMITER{
+
+			- default delimiter is the semicolon ';'
+			- delimiter tells the DBMS when a query ends.
+			- sometimes we need to use semicolon inside the query itself so we have to change the delimiter for that query
+			- in such cases :
+				- change the delmimer to any char lets say '$$' using command >> delimiter $$ <<
+				- perform query with the new delimiter >> select XYZ $$ <<
+				- then change back the delimiter to semicolon >> delimiter ; <<
+			- helps in triggers, triggers can be modified from command line sql and usually not from IDEs.
+		}
+
+		TRIGGERS{
+
+			- used to perform an action on DB when an event occurs. 
+
+			>>  delimiter $$ <<
+			
+			>>	create trigger $triggerName before/after insert/update/delete
+				 on $tableName
+				 for each row begin
+				 	if new.$colName = $someval then
+				 		insert into $tablename2 values ($v1, $v2...);
+				 	elseif new.$colName2 = $val2 then
+				 		insert into ...
+				 	else
+				 		insert into ...
+				 	endif
+				 end $$ <<
+			
+			>>	delimiter ; <<
+
+			DELETE{
+				>> drop trigger $triggerName; <<
+			}
+		}
+
+		ALL{
+
+		}
+
+		HAVING{
+
+		}
+	}
+}
+SPRING BOOT{
+	INTRO{
+		- in early 2000's if we wanted to create a project in java for enterprise we had to use a lot of Java EE features (like EJB)
+		- EJB was a good technology at that time and a lot could be achieved. problem was that it becomes difficult to manage them. also heavy.
+		- EJB worked with heaentities which was heavy work. so they made the same possible with POJOs. thats how spring framework originated. it supports POJOs, depency injection, AOP, MVC, etc. it can integreate with other frameworks like hibernate as well.
+		- now when you are making large applications using spring framework integrated with other frameworks too, there needs to be multiple configurations. in enterprise applications these multiple configurations become way too complicated (specially for beginers/ individuals). you also need so many jar files.
+		- but devs want to focus on coding more than configs.
+		- then spring boot was created out of spring framework. it was default configs done for you. it gives you production ready code when you open a new proj. integrated with a embedded server(tomcat) + database as well.
+	} 
+
+	DEPENDENCY INJECTION{
+		- dependency in a code is some info which can change. we want to separate such parts of code from the project so that we dont have to recompile everytime the dependency is changed, such dependencies are kept in external configs from where they are injected.
+		- can use @Component on a class which acts as a dependency. and when making the object with interface we use the annotation @Autowired to inject it from that component.
+		- this supports loose coupling.
+		- also supports unit testing (mock objects) when objects are loosely coupled.
+	}
+
+	IDE{
+		- we can use STS(free) or Intellij(paid - preferred)
+	}
+
+	creating a new project {
+		- in intellij we create a spring initialised project. it will download all the needed configs from "spring.io" URL for us to be ready for coding instead of wasting time on configs.
+	}
+
+	BEANS{
+		- suppose i have a class Circle. now i use this class and its object in my code. tomorrow if this class needs to be replaced by another clas Triangle we will have to replace all the code "Circle circle = new Circle();" -> " Triangle triangle = new Triangle();" and so on. how can we make it efficient. we can make an interface Shape and use it to be implemented in both Circle and Triangle classes. so now we can write 
+		Shape shape = new Circle();
+		but still when we have to change from circle to Tringle we will have to rewrite the code as
+		Shape shape = new Trinagle();
+
+		- now this shape actually is a dependency. because it keeps on changing. so we want to completely pull it out of code and decouple it so that it is easier to handle it. 
+
+		- Shape is an interface implemented by classes Cicle only. 
+		we can add @Component over the class to tell spring framework that this is a dependency
+
+			@Complonent
+			class Circle implements Shape{
+
+			}
+
+		and then wherever we want to use this, we use @Autowired to inject it
+
+			class main{
+
+				@Autowired
+				Shape shape;
+			}
+
+		- by doing this spring on runtime will create a bean on class Circle in its container and inject it wherever it is autowired. we usually autowire interfaces;
+		- this way if i write
+
+			class main{
+
+				@Autowired
+				Shape shape;
+
+				@Autowired
+				Shape shape2;
+			}
+
+		these to shapes will be refering to the same object that was created by spring. because by default spring creates only 1 object of that class and referes it wherever it is needed in the code. to change that we need to change the scope on the bean.
+
+		SCOPE{
+
+			- scope defines the lifecycle of the bean. 
+
+			SINGLETON SCOPE{
+				- singleton scope is the default scope that means that bean will have only object created when the code is built in the spring container.
+
+				- this is useful for creating beans of service classes which do not require any new reference. service classes are usually only used for there processing methods so one object can be used for all the processing required for different inputs.
+
+				- it is default scope so we dont need to write anything to get this.
+			}
+
+			PROTOTYPE SCOPE{
+
+				- prototype scope is when we want to have different objects/beans injected in different reference where they are needed.
+
+				- soppose we want it for our class circle. we will use @Scope annotation and assign its value to "prototype".
+
+					@Complonent
+					@Scope(value = "prototype")
+					class Circle implements Shape{
+
+					}
+			}
+		}
+
+		Qualifiers{
+			- now suppose there are 2 classes Circle and Triangle which implement Shape. now if we autowire Shape object it does not know which implementation we want and will throw an error.
+
+			- to resolve this, we use @Qualifier. it does what it says, it adds a qualifying method by which we can tell spring which bean we want.
+
+			- simple one is qualify by name.
+
+			@Complonent("circle")
+			class Circle implements Shape{
+
+			}
+
+			@Complonent("triangle")
+			class Triangle implements Shape{
+
+			}
+
+			class main{
+
+				@Autowired
+				@Qualifier("circle")
+				Shape shape;
+
+				@Autowired
+				@Qualifier("triangle")
+				Shape shape2;
+			}
+
+			like this we pass the name string in the @Component and then when we need to autowire we add @Qualifier with the name of the component. note, both components are singleton in this example but can very well be prototype as well.
+
+		}
+	}
+
+	WEB APP{
+		- to make a web app ypou need to create a new proj and select spring web component while creating it. spring boot shall download an embedded tomcat in your project which will run on localhost:8080.
+		- a lot of such configurations are made by spring boot but we can always override/update/change them.
+		- we will also add tomcat-jasper dependency in our pom.xml file.
+		- now we create a web page for our web app. we shall create a home.jsp page in src/main/webapp (new folder created in main).
+		- also write a HomeController class in src/main/java/ to create an API endpoint for our web app. we want thatwhen we go to localhost:8080/home we should get our web pade home.jsp displayed there.
+
+		xxxxxxxxxxx
+	}
+}
+AUTOMATION{
+	- programming routine for manual processes to reduce human dependency.
+
+	WEB AUTOMATION{
+
+		- automating processes over the internet.
+
+		TOOLS{
+
+			- beautiful soup : its a library which can access a page from a url and fetch protions of data needed.
+			- scrapy : its a complete web crawling framework. can crawl to a whole website to fetch data needed.
+			- selenium : web automation framework which automates a browser and interacts with dynamic websites (which use backend)
+		} 
+
+		SCRAPY{
+			- python based framework
+
+			INIT{
+				- install python and pycharm
+				- create a new project in pycharm, add scrapy in project interpreter
+				- in pycharm terminal (where you are working in your own virtial env) type : || scrapy startproject $projectName ||
+				- this makes a scrapy project for us with its files:
+					scrapy101 (py proj)
+						scrapyproj ($scrapyProjName)
+							scrapyproj  (another directory with same name as above)
+								spiders (folder where we make all our spiders (python files))
+								__init__.py
+								items.py
+								middlewares.py
+								pipelines.py
+								settings.py
+							scrapy.cfg
+						venv
+			}
+			
+			SCRAPY FILES{
+				
+				- settings.py - conatins info like :
+					bot name : basicall the $scrappyprojname
+					user agent : the info which tells the server on which we send the request who we are : like chrome, mozilla, etc
+					robots txt obey : (default true) flag which does not let crawler go on pages of a website which have been mentioned in the $website.com/robots.txt webpage
+					concureent requests : number of parallel requests we will make by the spider
+					autothrottle enabled : (default true) to avoid over throttling the target server
+					... and many more
+
+				- items.py : we put all the fiels that we want to scrape in this file
+
+				- pipelines.py : after scraping data we want to store it using this file
+
+				- middleware.py : when sending request we can add stuff like proxies to the request using this file
+			}
+
+			MAKING A SPIDER{
+
+				- we make new spider in 'spiders' folder by creating a python file inside it : $spiderFileName.py
+
+				EXAMPLE SPIDER{
+
+					import scrapy
+
+					class QutesSpider(scrapy.Spider):
+					    name = 'quotes'
+					    start_urls = [
+					        'http://quotes.toscrape.com/'
+					    ]
+
+					    def parse(self, response):
+					            title = response.css('title').extract()
+					            yield {'titletext': title}
+
+				}
+
+				- we import scrapy in this spider
+				- then we make a class $ourSpiderClass which imports scrapy.Sider class which implements a lot of stuff for this spider behind the scenes.
+				- we set 'name' variable to set the name of our spider $spiderName
+				- we set start_urls as the list of urls on which we want it to run.
+				- then we need to implement a method parse(self, response):
+					- this method contains response which is the page src fetch from the urls. and we define what to do with this page src in this method, basically fetch useful information out of this page.
+					- here in the above example we try to fetch the <title> tag out of the page response so we use response.css('title').extract() which will return list of all the titles out of this page src.
+					- we dont return from this method. instead of that we use yield with a map of all that we need.
+			}
+
+			EXECUTING A SPIDER{
+
+				- one you have created a spider in the spiders folder we go to terminal and use command 
+
+				|| scrapy crawl $spiderName || 
+
+				where $spiderName is the value of name variable set in the spider class
+			}
+
+			SCRAPY SHELL{
+
+				- use command ||scrapy shell $webpageURL || to open a shell in which response is loaded with the parsed page src of $webpageURL so now you can use this to checkout which selector will work the best for you to fetch this info you need.
+			}
+
+			EXTRACTING DATA WITH CSS SELECTORS{
+
+				- response.css('$tagName').extract() will fetch all tags with that tagname and the output of this would be
+				
+				<$tagname>$some info</$tagname>
+
+
+				- if we only need $some info, we can use response.css('$tagName::text').extract()
+
+				tag : $tagName
+				class : .$className
+				id : #$idName
+
+				"p.abc > ul > li" : this is a css selector to find all <p> which have class abc. then in them, find all <ul>. then <li>. 
+			}
+
+			EXTRACTING DATA WITH XPATH SELECTORS{
+				- response.xpath('$xpath').extract() will fetch all elements with that xpath
+				
+				Expression	Description
+				nodename	Selects all nodes with the name "nodename"
+				/			Selects from the root node
+				//			Selects nodes in the document from the current node that match the selection no matter where they are
+				.			Selects the current node
+				..			Selects the parent of the current node
+				@			Selects attributes
+
+				https://www.w3schools.com/xml/xpath_syntax.asp
+			}
+
+			
+		}
+	}
+}
